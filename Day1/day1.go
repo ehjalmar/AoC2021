@@ -14,8 +14,6 @@ func main() {
 	executePart2(lines)
 }
 
-// readLines reads a whole file into memory
-// and returns a slice of its lines.
 func readInputNumbers(path string) ([]int, error) {
 	file, err := os.Open(path)
 	if err != nil {
