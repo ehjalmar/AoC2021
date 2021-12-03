@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -35,7 +36,7 @@ func main() {
 	inputData, _ := readInputData("day3input.txt")
 
 	executePart1(inputData)
-	//executePart2(commands)
+	executePart2(inputData)
 }
 
 func executePart1(inputData []DiagnosticReportRow) {
@@ -53,13 +54,12 @@ func executePart1(inputData []DiagnosticReportRow) {
 			}
 		}
 		if ones > zeros {
-			// gamma.Values[i] = 1
-			// epsilon.Values[i] = 0
+			gamma = gamma + strconv.Itoa(1)
+			epsilon = epsilon + strconv.Itoa(0)
+		} else if ones == zeros {
 			gamma = gamma + strconv.Itoa(1)
 			epsilon = epsilon + strconv.Itoa(0)
 		} else {
-			// gamma.Values[i] = 0
-			// epsilon.Values[i] = 1
 			gamma = gamma + strconv.Itoa(0)
 			epsilon = epsilon + strconv.Itoa(1)
 		}
@@ -69,4 +69,92 @@ func executePart1(inputData []DiagnosticReportRow) {
 	gammaDecimal, _ := strconv.ParseInt(gamma, 2, 64)
 	epsilonDecimal, _ := strconv.ParseInt(epsilon, 2, 64)
 	println(gammaDecimal * epsilonDecimal)
+}
+
+func mostCommonForPosition(inputData []DiagnosticReportRow, position int) int {
+
+	zeros := 0
+	ones := 0
+	for _, row := range inputData {
+		if row.Values[position] == 0 {
+			zeros++
+		} else if row.Values[position] == 1 {
+			ones++
+		}
+	}
+	if ones >= zeros {
+		return 1
+	} else {
+		return 0
+	}
+}
+
+func leastCommonForPosition(inputData []DiagnosticReportRow, position int) int {
+
+	zeros := 0
+	ones := 0
+	for _, row := range inputData {
+		if row.Values[position] == 0 {
+			zeros++
+		} else if row.Values[position] == 1 {
+			ones++
+		}
+	}
+	if ones >= zeros {
+		return 0
+	} else {
+		return 1
+	}
+}
+
+func executePart2(inputData []DiagnosticReportRow) {
+
+	inputDataEpsilon := inputData
+	var gamma string
+	var epsilon string
+
+	for pos := 0; pos < len(inputData[0].Values); pos++ {
+		var dataToKeepGamma []DiagnosticReportRow
+		mostCommon := mostCommonForPosition(inputData, pos)
+
+		for i := 0; i < len(inputData); i++ {
+			if inputData[i].Values[pos] == mostCommon {
+				dataToKeepGamma = append(dataToKeepGamma, inputData[i])
+			}
+		}
+		inputData = dataToKeepGamma
+		if len(dataToKeepGamma) == 1 {
+			break
+		}
+	}
+	println("Gamma:")
+	for _, v := range inputData[0].Values {
+		print(v)
+		gamma = gamma + strconv.Itoa(v)
+	}
+
+	for pos := 0; pos < len(inputDataEpsilon[0].Values); pos++ {
+		var dataToKeepEpsilon []DiagnosticReportRow
+		lestCommon := mostCommonForPosition(inputDataEpsilon, pos)
+
+		for i := 0; i < len(inputDataEpsilon); i++ {
+			if inputDataEpsilon[i].Values[pos] != lestCommon {
+				dataToKeepEpsilon = append(dataToKeepEpsilon, inputDataEpsilon[i])
+			}
+		}
+		inputDataEpsilon = dataToKeepEpsilon
+		if len(dataToKeepEpsilon) == 1 {
+			break
+		}
+	}
+	println("\nEpsilon:")
+
+	for _, v := range inputDataEpsilon[0].Values {
+		print(v)
+		epsilon = epsilon + strconv.Itoa(v)
+	}
+
+	gammaDecimal, _ := strconv.ParseInt(gamma, 2, 64)
+	epsilonDecimal, _ := strconv.ParseInt(epsilon, 2, 64)
+	println("\n" + fmt.Sprint(gammaDecimal*epsilonDecimal))
 }
