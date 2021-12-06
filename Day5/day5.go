@@ -17,16 +17,6 @@ type DataPoint struct {
 	Y int
 }
 
-func deleteEmpty(s []string) []string {
-	var r []string
-	for _, str := range s {
-		if str != "" {
-			r = append(r, str)
-		}
-	}
-	return r
-}
-
 func readInputData(path string) ([]Line, error) {
 	file, err := os.Open(path)
 	if err != nil {
