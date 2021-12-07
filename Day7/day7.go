@@ -40,6 +40,7 @@ func readInputData(path string) map[int]int {
 
 func main() {
 	FindChepestPosition(readInputData("day7input.txt"))
+	FindChepestPosition2(readInputData("day7input.txt"))
 }
 
 func FindChepestPosition(countForPositions map[int]int) {
@@ -52,7 +53,6 @@ func FindChepestPosition(countForPositions map[int]int) {
 			cost = distance * currentCount
 			costForPosition[i] += cost
 		}
-		println(strconv.Itoa(i) + " has cost: " + strconv.Itoa(costForPosition[i]))
 	}
 
 	positions := make([]int, 0, len(costForPosition))
@@ -64,9 +64,35 @@ func FindChepestPosition(countForPositions map[int]int) {
 		return costForPosition[positions[i]] > costForPosition[positions[j]]
 	})
 
-	for _, position := range positions {
-		fmt.Printf("%-7v %v\n", position, costForPosition[position])
+	fmt.Printf("%-7v %v\n", positions[len(positions)-1], costForPosition[positions[len(positions)-1]])
+}
+
+func FindChepestPosition2(countForPositions map[int]int) {
+	costForPosition := make(map[int]int)
+
+	for i := 0; i < len(countForPositions); i++ {
+		var cost int
+		for currentNumber, currentCount := range countForPositions {
+			distance := Abs(Abs(currentNumber) - i)
+			costForDistance := 0
+			for foo := 1; foo <= distance; foo++ {
+				costForDistance += foo
+			}
+			cost = costForDistance * currentCount
+			costForPosition[i] += cost
+		}
 	}
+
+	positions := make([]int, 0, len(costForPosition))
+	for position := range costForPosition {
+		positions = append(positions, position)
+	}
+
+	sort.Slice(positions, func(i, j int) bool {
+		return costForPosition[positions[i]] > costForPosition[positions[j]]
+	})
+
+	fmt.Printf("%-7v %v\n", positions[len(positions)-1], costForPosition[positions[len(positions)-1]])
 }
 
 func Abs(x int) int {
