@@ -89,8 +89,6 @@ func part2(input [][]int, lowPoints []Point) {
 		basinSum, _ = findBasinMembers(currentLowPoint, basinSum, input, visited)
 
 		basins = append(basins, basinSum)
-		// println("Current lowPoint: " + strconv.Itoa(currentLowPoint.Row) + " " + strconv.Itoa(currentLowPoint.Column))
-		// println("Current value: " + strconv.Itoa(input[currentLowPoint.Row][currentLowPoint.Column]))
 	}
 
 	sort.Slice(basins, func(i, j int) bool {
